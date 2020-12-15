@@ -103,6 +103,7 @@
         <div class="col-md-3">
             <label for="search">Search: </label>
             <input wire:model="query" id="search" type="text" placeholder="Search...">
+            <p class="badge badge-info" wire:model="resultCount">{{$resultCount}}</p>
         </div>
         <div class="col-md-3">
             <label for="orderBy">Order By: </label>

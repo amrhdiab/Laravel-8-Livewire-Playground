@@ -9,47 +9,51 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+	use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+	/**
+	 * The attributes that are mass assignable.
+	 *
+	 * @var array
+	 */
+	protected $fillable = [
+		'name',
+		'email',
+		'password',
+	];
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+	/**
+	 * The attributes that should be hidden for arrays.
+	 *
+	 * @var array
+	 */
+	protected $hidden = [
+		'password',
+		'remember_token',
+	];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'email_verified_at' => 'datetime',
+	];
 
 	public function posts()
 	{
 		return $this->hasMany(Post::class);
-		//return $this->hasMany('App\Models\Post');
 	}
 
 	public function search($query)
 	{
 		return empty($query) ? $this->posts() :
-			$this->posts()->where('title','like','%'.$query.'%');
+			$this->posts()->where(function ($q) use($query){ //make sure to group your where & whereHas statements together
+				$q->where('title', 'like', '%'.$query.'%');
+				$q->orWhereHas('category',function ($q) use ($query){
+					$q->where('name', 'like', '%'.$query.'%');
+				});
+			});
 	}
 }
