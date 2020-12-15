@@ -12,6 +12,27 @@
 
 namespace App\Models{
 /**
+ * App\Models\Category
+ *
+ * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
+ * @property-read int|null $posts_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Category whereUpdatedAt($value)
+ */
+	class Category extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Post
  *
  * @property int $id
@@ -20,11 +41,14 @@ namespace App\Models{
  * @property int $user_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $category_id
+ * @property-read \App\Models\Category $category
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Post newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Post newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Post query()
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereTitle($value)

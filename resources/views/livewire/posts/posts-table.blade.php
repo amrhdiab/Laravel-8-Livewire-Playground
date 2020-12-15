@@ -108,7 +108,8 @@
             <label for="orderBy">Order By: </label>
             <select wire:model="orderBy" id="orderBy">
                 <option value="id">Id</option>
-                <option value="title">title</option>
+                <option value="title">Title</option>
+                <option value="category_id">Category</option>
                 <option value="created_at">Publish Date</option>
             </select>
         </div>
@@ -135,38 +136,42 @@
         <table class="table table-striped table-sm">
             <thead>
             <tr>
-                <th>#</th>
+                <th>id</th>
                 <th>title</th>
+                <th>category</th>
                 <th>Publish Date</th>
                 <th>Last Updated</th>
                 <th>Actions</th>
             </tr>
             </thead>
             <tbody>
-            @if ($posts->count())
-                @foreach ($posts as $post)
-                    <tr>
-                        <td>{{$loop->index+1}}</td>
-                        <td>{{$post->title}}</td>
-                        <td>{{$post->created_at->diffForHumans()}}</td>
-                        <td>{{$post->updated_at->diffForHumans()}}</td>
-                        <td>
-                            <button data-bs-toggle="modal" data-bs-target="#viewModal"
-                                    wire:click="$emitTo('posts.post-view','initView',{{ $post }})"
-                                    class="btn btn-info btn-sm">View
-                            </button>
-                            <button data-bs-toggle="modal" data-bs-target="#editModal"
-                                    wire:click="$emitTo('posts.post-edit','initEdit',{{ $post }})"
-                                    class="btn btn-primary btn-sm">Edit
-                            </button>
-                            <button data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                    wire:click="$emitTo('posts.post-delete','initDelete',{{ $post }})"
-                                    class="btn btn-danger btn-sm">Delete
-                            </button>
-                        </td>
-                    </tr>
-                @endforeach
-            @endif
+            @forelse($posts as $post)
+                <tr>
+                    <td>{{$post->id}}</td>
+                    <td>{{$post->title}}</td>
+                    <td>{{$post->category->name}}</td>
+                    <td>{{$post->created_at->diffForHumans()}}</td>
+                    <td>{{$post->updated_at->diffForHumans()}}</td>
+                    <td>
+                        <button data-bs-toggle="modal" data-bs-target="#viewModal"
+                                wire:click="$emitTo('posts.post-view','initView',{{ $post }})"
+                                class="btn btn-info btn-sm">View
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#editModal"
+                                wire:click="$emitTo('posts.post-edit','initEdit',{{ $post }})"
+                                class="btn btn-primary btn-sm">Edit
+                        </button>
+                        <button data-bs-toggle="modal" data-bs-target="#deleteModal"
+                                wire:click="$emitTo('posts.post-delete','initDelete',{{ $post }})"
+                                class="btn btn-danger btn-sm">Delete
+                        </button>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center">No posts found...</td>
+                </tr>
+            @endforelse
             </tbody>
         </table>
         {{$posts->links()}}
