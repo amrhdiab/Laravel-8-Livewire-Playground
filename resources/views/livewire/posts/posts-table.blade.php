@@ -59,7 +59,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirm Post Deletion</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Confirm Post/s Deletion</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
                 </div>
@@ -96,8 +96,11 @@
     </div>
 
 
-    <button wire:click.prevent="$emitTo('posts.post-create')" data-bs-toggle="modal" data-bs-target="#createModal"
+    <button data-bs-toggle="modal" data-bs-target="#createModal"
             class="btn btn-success btn-md mb-2">Create New Post
+    </button>
+    <button wire:click.prevent="$emitTo('posts.post-delete','initBulkDelete',{{json_encode($selected)}})" data-bs-toggle="modal" data-bs-target="#deleteModal"
+            class="btn btn-danger btn-md mb-2">Bulk Delete
     </button>
     <div class="row">
         <div class="col-md-3">
@@ -137,6 +140,7 @@
         <table class="table table-striped table-sm">
             <thead>
             <tr>
+                <th></th>
                 <th>id</th>
                 <th>title</th>
                 <th>category</th>
@@ -148,6 +152,9 @@
             <tbody>
             @forelse($posts as $post)
                 <tr>
+                    <td>
+                        <input wire:model="selected" type="checkbox" value="{{$post->id}}">
+                    </td>
                     <td>{{$post->id}}</td>
                     <td>{{$post->title}}</td>
                     <td>{{$post->category->name}}</td>

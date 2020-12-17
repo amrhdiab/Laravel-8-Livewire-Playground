@@ -15,4 +15,13 @@
         <span class="text-danger">{{$message}}</span>
         @enderror
     </div>
+    <div class="form-group">
+        <label for="category">Category:</label>
+        <select name="category" id="category" class="form-control" title="Category">
+            <option value="">Select Category...</option>
+        </select>
+        @error('body')
+        <span class="text-danger">{{$message}}</span>
+        @enderror
+    </div>
 </form>

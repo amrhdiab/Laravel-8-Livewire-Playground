@@ -74,6 +74,20 @@ class PostPolicy
 	}
 
 	/**
+	 * Determine whether the user can delete the model.
+	 *
+	 * @param User $user
+	 * @param array $postIds
+	 *
+	 * @return mixed
+	 */
+	public function deleteSelected(User $user, $postIds)
+	{
+		//return $user->id === $post->user_id;
+		return Post::findMany($postIds)->contains('user_id', $user->id);
+	}
+
+	/**
 	 * Determine whether the user can restore the model.
 	 *
 	 * @param User $user

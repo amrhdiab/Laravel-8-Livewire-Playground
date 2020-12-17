@@ -10,12 +10,17 @@ class PostCreate extends Component
 {
 	use AuthorizesRequests;
 
-	public $title, $body;
+	public $title, $body, $category_id;
 	protected $listeners = ['store'];
 
 	protected $rules = [
-		'title' => 'required|min:6',
-		'body'  => 'required|min:6',
+		'title'       => 'required|min:6',
+		'body'        => 'required|min:6',
+		'category_id' => 'required',
+	];
+
+	protected $attributes = [
+		'category_id' => 'Category',
 	];
 
 	public function hydrate()

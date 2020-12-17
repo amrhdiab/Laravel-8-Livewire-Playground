@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpMissingFieldTypeInspection */
 
 namespace App\Http\Livewire\Posts;
 
@@ -11,7 +11,8 @@ class PostDelete extends Component
 	use AuthorizesRequests;
 
 	public $post;
-	protected $listeners = ['initDelete', 'delete'];
+	public $selected;
+	protected $listeners = ['initDelete','initBulkDelete', 'delete','deleteSelected'];
 
 	public function initDelete(Post $post)
 	{
@@ -19,13 +20,24 @@ class PostDelete extends Component
 		$this->post = $post;
 	}
 
+	public function initBulkDelete($selected)
+	{
+		// assign values to public props
+		$this->selected = $selected;
+	}
+
 	public function delete()
 	{
-		$this->authorize('delete', $this->post);
-		$this->post->delete();
-
+		if(!empty($this->selected)){
+			$this->authorize('deleteSelected',[Post::class,$this->selected]);
+			Post::destroy($this->selected);
+		}
+		if(!empty($this->post)){
+			$this->authorize('delete', $this->post);
+			$this->post->delete();
+		}
 		$this->emit('cancel','deleteModal');
-		$this->emitUp('refresh','Post successfully deleted!');
+		$this->emitUp('refresh','Successfully deleted!');
 	}
 
     public function render()

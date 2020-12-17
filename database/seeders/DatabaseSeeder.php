@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
 		User::factory(10)->create();
 
-		Category::factory(5)->has(Post::factory(20)->state([
+		Category::factory(7)->has(Post::factory(50)->state([
 			'user_id'    => fn() => User::inRandomOrder()->first(),
 			'created_at' => fn() => now()->subDays(random_int(1, 10)),
 		]))->create();

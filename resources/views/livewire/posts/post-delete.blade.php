@@ -1,3 +1,3 @@
 <div>
-    Are you sure you want to delete this post?
+    Are you sure you want to delete selected post/s?
 </div>

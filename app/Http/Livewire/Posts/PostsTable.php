@@ -1,4 +1,6 @@
-<?php /** @noinspection PhpUndefinedVariableInspection */
+<?php /** @noinspection ALL */
+
+/** @noinspection PhpUndefinedVariableInspection */
 
 namespace App\Http\Livewire\Posts;
 
@@ -10,11 +12,13 @@ class PostsTable extends Component
 {
 	use WithPagination;
 
-	public $query;
-	public $resultCount;
-	public $orderBy = 'created_at';
-	public $orderAsc = 'desc';
-	public $perPage = 5;
+	public ?string $query = null;
+	public ?string $resultCount;
+	public string $orderBy = 'created_at';
+	public string $orderAsc = 'desc';
+	public int $perPage = 15;
+	public ?array $selected = [];
+
 	protected $paginationTheme = 'bootstrap';
 	protected $listeners = ['refresh' => 'refresh'];
 
@@ -25,7 +29,7 @@ class PostsTable extends Component
 			->orderBy($this->orderBy, $this->orderAsc)->paginate($this->perPage);
 		//results count available with search only
 		$this->resultCount = empty($this->query) ? null :
-			$posts->count().' '.Str::plural('post',$posts->count()).' found';
+			$posts->count().' '.Str::plural('post', $posts->count()).' found';
 
 		return view('livewire.posts.posts-table', compact('posts'));
 	}
