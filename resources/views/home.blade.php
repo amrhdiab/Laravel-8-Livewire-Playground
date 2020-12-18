@@ -5,7 +5,7 @@
 
         // closing any modal dynamically
         window.livewire.on('cancel', modal => {
-            $('#'+modal).modal('hide');
+            $('#' + modal).modal('hide');
         });
 
     </script>

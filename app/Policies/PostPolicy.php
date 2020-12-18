@@ -74,7 +74,7 @@ class PostPolicy
 	}
 
 	/**
-	 * Determine whether the user can delete the model.
+	 * Determine whether the user can bulk delete the model.
 	 *
 	 * @param User $user
 	 * @param array $postIds
@@ -82,6 +82,20 @@ class PostPolicy
 	 * @return mixed
 	 */
 	public function deleteSelected(User $user, $postIds)
+	{
+		//return $user->id === $post->user_id;
+		return Post::findMany($postIds)->contains('user_id', $user->id);
+	}
+
+	/**
+	 * Determine whether the user can bulk update the model.
+	 *
+	 * @param User $user
+	 * @param array $postIds
+	 *
+	 * @return mixed
+	 */
+	public function updateSelected(User $user, $postIds)
 	{
 		//return $user->id === $post->user_id;
 		return Post::findMany($postIds)->contains('user_id', $user->id);

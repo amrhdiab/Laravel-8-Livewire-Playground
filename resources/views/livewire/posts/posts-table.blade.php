@@ -1,4 +1,5 @@
-<div>
+<div class="h-100">
+
     <div>
         @if (session()->has('message'))
             <div class="alert alert-success">
@@ -7,101 +8,35 @@
         @endif
     </div>
 
+    <div class="mx-auto my-auto" style="width: 200px;height: 100%">
+        <img wire:loading.delay src="{{asset('images/spinner.svg')}}" alt="Loading..." class="position-absolute">
+    </div>
+
+
     <!-- Edit Modal -->
-    <div wire:ignore.self class="modal fade" id="editModal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Edit Post</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    @livewire('posts.post-edit')
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" wire:click.prevent="$emitTo('posts.post-edit','update')"
-                            class="btn btn-primary" data-dismiss="modal">Update
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    @include('livewire.posts.post-edit')
+    <!-- Edit Category Bulk Modal -->
+    @include('livewire.posts.post-edit-bulk')
     <!-- Create Modal -->
-    <div wire:ignore.self class="modal fade" id="createModal" tabindex="-1" role="dialog"
-         aria-labelledby="createPost" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Create New Post</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    @livewire('posts.post-create')
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" wire:click.prevent="$emitTo('posts.post-create','store')"
-                            class="btn btn-primary" data-dismiss="modal">Submit
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
+    @include('livewire.posts.post-create')
     <!-- Delete Confirmation Modal -->
-    <div wire:ignore.self class="modal fade" id="deleteModal" tabindex="-1" role="dialog"
-         aria-labelledby="createPost" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Confirm Post/s Deletion</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    @livewire('posts.post-delete')
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" wire:click="$emitTo('posts.post-delete','delete')"
-                            class="btn btn-danger" data-dismiss="modal">Delete
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog"
-         aria-labelledby="viewPost" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Post Details</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span
-                                aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    @livewire('posts.post-view')
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    @include('livewire.posts.post-delete')
+    <!-- View Modal -->
+    @include('livewire.posts.post-view')
 
 
     <button data-bs-toggle="modal" data-bs-target="#createModal"
-            class="btn btn-success btn-md mb-2">Create New Post
+            class="btn btn-success btn-md mb-2">Create New Post</button>
+
+    <button data-bs-toggle="modal" data-bs-target="#deleteModal"
+            class="btn btn-danger btn-md mb-2" {{ $bulkDisabled ? 'disabled' : null }}>Bulk Delete
     </button>
-    <button wire:click.prevent="$emitTo('posts.post-delete','initBulkDelete',{{json_encode($selected)}})" data-bs-toggle="modal" data-bs-target="#deleteModal"
-            class="btn btn-danger btn-md mb-2">Bulk Delete
+
+    <button wire:click.prevent="initDataBulk" data-bs-toggle="modal"
+            data-bs-target="#editBulkModal"
+            class="btn btn-primary btn-md mb-2" {{ $bulkDisabled ? 'disabled' : null }}>Bulk Edit
     </button>
+
     <div class="row">
         <div class="col-md-3">
             <label for="search">Search: </label>
@@ -136,6 +71,7 @@
             </select>
         </div>
     </div>
+
     <div class="table-responsive">
         <table class="table table-striped table-sm">
             <thead>
@@ -150,10 +86,10 @@
             </tr>
             </thead>
             <tbody>
-            @forelse($posts as $post)
+            @forelse($paginatedPosts as $post)
                 <tr>
                     <td>
-                        <input wire:model="selected" type="checkbox" value="{{$post->id}}">
+                        <input wire:model="selectedPosts" value="{{$post->id}}" type="checkbox">
                     </td>
                     <td>{{$post->id}}</td>
                     <td>{{$post->title}}</td>
@@ -162,15 +98,15 @@
                     <td>{{$post->updated_at->diffForHumans()}}</td>
                     <td>
                         <button data-bs-toggle="modal" data-bs-target="#viewModal"
-                                wire:click="$emitTo('posts.post-view','initView',{{ $post }})"
+                                wire:click="initData({{ $post }})"
                                 class="btn btn-info btn-sm">View
                         </button>
                         <button data-bs-toggle="modal" data-bs-target="#editModal"
-                                wire:click="$emitTo('posts.post-edit','initEdit',{{ $post }})"
+                                wire:click="initData({{ $post }})"
                                 class="btn btn-primary btn-sm">Edit
                         </button>
                         <button data-bs-toggle="modal" data-bs-target="#deleteModal"
-                                wire:click="$emitTo('posts.post-delete','initDelete',{{ $post }})"
+                                wire:click="initData({{ $post }})"
                                 class="btn btn-danger btn-sm">Delete
                         </button>
                     </td>
@@ -182,6 +118,6 @@
             @endforelse
             </tbody>
         </table>
-        {{$posts->links()}}
+        {{$paginatedPosts->links()}}
     </div>
 </div>
