@@ -16,6 +16,10 @@
                 <hr>
                 <h6 class="text-decoration-underline">Category</h6>
                 <p class="text-muted">{{$categoryName}}</p>
+                <hr>
+                <h6 class="text-decoration-underline">Thumbnail</h6>
+                <img src="{{asset('storage/posts/thumb_uploads').'/'.$thumbnail}}"
+                     height="70px" width="70px" alt="post thumbnail">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

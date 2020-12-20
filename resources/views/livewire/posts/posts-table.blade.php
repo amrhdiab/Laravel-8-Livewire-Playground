@@ -77,9 +77,10 @@
             <thead>
             <tr>
                 <th></th>
-                <th>id</th>
-                <th>title</th>
-                <th>category</th>
+                <th>Id</th>
+                <th>Thumb</th>
+                <th>Title</th>
+                <th>Category</th>
                 <th>Publish Date</th>
                 <th>Last Updated</th>
                 <th>Actions</th>
@@ -92,6 +93,8 @@
                         <input wire:model="selectedPosts" value="{{$post->id}}" type="checkbox">
                     </td>
                     <td>{{$post->id}}</td>
+                    <td><img src="{{asset('storage/posts/thumb_uploads').'/'.$post->thumbnail}}"
+                             height="40px" width="40px" alt="post thumb"></td>
                     <td>{{$post->title}}</td>
                     <td>{{$post->category->name}}</td>
                     <td>{{$post->created_at->diffForHumans()}}</td>

@@ -38,6 +38,22 @@
                         <span class="text-danger">{{$message}}</span>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <label for="thumbnail">Thumbnail:</label>
+                        <input wire:model="uploadedThumbnail" type="file" name="thumbnail" id="thumbnail" class="form-control">
+                        @error('thumbnail')
+                        <span class="text-danger">{{$message}}</span>
+                        @enderror
+                        <br>
+                        Thumb Preview:
+                        @if ($uploadedThumbnail)
+                            <img src="{{ $uploadedThumbnail->temporaryUrl() }}" alt="temp thumbnail"
+                                 width="50px" height="50px">
+                        @elseif($thumbnail)
+                            <img src="{{asset('storage/posts/thumb_uploads').'/'.$thumbnail}}" alt="post thumbnail"
+                                 width="50px" height="50px">
+                        @endif
+                    </div>
                     <input wire:model="post_id" type="hidden" name="id">
                 </form>
             </div>
