@@ -2,12 +2,10 @@
 @section('title','Dashboard')
 @section('scripts')
     <script type="text/javascript">
-
         // closing any modal dynamically
         window.livewire.on('cancel', modal => {
             $('#' + modal).modal('hide');
         });
-
     </script>
 @endsection
 
